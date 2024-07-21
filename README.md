@@ -3,15 +3,14 @@
 
 - 🌱 I’m currently learning **Machine Learning**
 
-- 👨‍💻 All of my projects are available at [sourish.framer.website](sourish.framer.website)
+- 👨‍💻 All of my projects are available at [https://sourish.framer.website/projects](https://sourish.framer.website/projects)
 
 - 📫 How to reach me **sourish.aiml@gmail.com**
 
 <h3 align="left">Connect with me:</h3>
 <p align="left">
 <a href="https://twitter.com/sourish_c_07" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/twitter.svg" alt="sourish_c_07" height="30" width="40" /></a>
-<a href="https://linkedin.com/in/www.linkedin.com/in/sourish-chatterjee/" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="www.linkedin.com/in/sourish-chatterjee/" height="30" width="40" /></a>
-<a href="https://instagram.com/scandium___0721" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg" alt="scandium___0721" height="30" width="40" /></a>
+<a href="https://instagram.com/sourish_ml" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg" alt="sourish_ml" height="30" width="40" /></a>
 </p>
 
 <h3 align="left">Languages and Tools:</h3>
