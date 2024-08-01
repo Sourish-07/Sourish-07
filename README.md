@@ -3,7 +3,7 @@
 
 - 🌱 I’m currently learning **Deep Learning**
 
-- 👨‍💻 All of my projects are available at [https://sourish.framer.website/](https://sourish.framer.website/projects)
+- 👨‍💻 All of my projects are available at  [My Portfolio](https://sourish.framer.website/)
 
 - 💬 Ask me about **Python, ML, DA, GCP**
 
