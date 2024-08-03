@@ -9,7 +9,7 @@
 
 - 📫 How to reach me **contact.sourishchatterjee@gmail.com**
 
-- 📄 Know about my experiences [https://tinyurl.com/sourishc](https://tinyurl.com/sourishc)
+- 📄 Know about my experiences [https://tinyurl.com/sourishc](https://tinyurl.com/yxueb3d3)
 
 - ⚡ Fun fact: **I was inspired by the movie Iron Man to specialize in AI and ML!**
 
