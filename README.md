@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/Sourish-07/Sourish-07/main/assets/header.png" width="800" alt="animated header" />
+    <img src="https://raw.githubusercontent.com/Sourish-07/Sourish-07/main/assets/header.png" width="1000"/>
 </div>
 
 <br>
