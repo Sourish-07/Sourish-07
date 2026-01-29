@@ -1,9 +1,7 @@
 <div align="center">
     <img src="https://raw.githubusercontent.com/Sourish-07/Sourish-07/main/assets/header.png" width="1000"/>
 </div>
-
 <br>
-
 <div align="center">
   <h1>Sourish-07</h1>
   <p>
@@ -11,7 +9,6 @@
     Building reproducible research pipelines, scalable backtesting frameworks, and production-grade async tools.
   </p>
 </div>
-
 <div align="center">
   <img src="https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python" />
   <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
@@ -19,29 +16,27 @@
   <img src="https://img.shields.io/badge/Pandas-150458?style=flat-square&logo=pandas&logoColor=white" alt="Pandas" />
   <img src="https://img.shields.io/badge/NumPy-013243?style=flat-square&logo=numpy&logoColor=white" alt="NumPy" />
 </div>
-
 <br>
-
 <div align="center">
   <img src="https://github-readme-stats.vercel.app/api?username=Sourish-07&theme=dracula&show_icons=true&hide_border=true&include_all_commits=true&count_private=true&cache_seconds=14400" height="165" alt="stats" />
   <img src="https://github-readme-streak-stats.herokuapp.com/?user=Sourish-07&theme=dracula&hide_border=true&cache_seconds=14400" height="165" alt="streak" />
 </div>
-
 <div align="center">
   <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Sourish-07&layout=compact&theme=dracula&hide_border=true&langs_count=8&cache_seconds=14400" height="165" alt="top languages" />
 </div>
-
 <div align="center">
   <img src="https://github-profile-trophy.vercel.app/?username=Sourish-07&theme=dracula&no-frame=true&margin-w=15&column=7" alt="trophies" />
 </div>
-
 <br>
 
 ### Core Focus
-Reproducible quantitative pipelines • Cross-sectional equity signal validation • ML for asset pricing • Async job systems • Mathematical modeling & optimization
+- Reproducible quantitative pipelines
+- Cross-sectional equity signal validation
+- ML for asset pricing
+- Async job systems
+- Mathematical modeling & optimization
 
 ### Featured Repositories
-
 <table>
   <tr>
     <td align="center" width="33%">
@@ -64,7 +59,6 @@ Reproducible quantitative pipelines • Cross-sectional equity signal validation
     </td>
   </tr>
 </table>
-
 <table>
   <tr>
     <td align="center" width="50%">
@@ -81,12 +75,9 @@ Reproducible quantitative pipelines • Cross-sectional equity signal validation
     </td>
   </tr>
 </table>
-
 <br>
-
 <div align="center">
-  <img src="https://raw.githubusercontent.com/Sourish-07/Sourish-07/output/github-contribution-grid-snake.svg" alt="contribution snake" width="800" />
+  <img src="https://raw.githubusercontent.com/Sourish-07/Sourish-07/output/github-contribution-grid-snake-dark.svg" alt="contribution snake" width="800" />
   <br><br>
 </div>
-
 <br>
