@@ -9,7 +9,7 @@
 <br>
 
 <div align="center">
-  <img src="https://readme-typing-svg.demolab.com?lines=Quantitative+Finance;Machine+Learning;Systems+Engineering;Reproducible+Research+Pipelines&center=true&vCenter=true&size=32&width=660&color=00C0A0&background=00000000&duration=4200&pause=1600" />
+  <img src="https://readme-typing-svg.demolab.com?lines=Quantitative+Finance&center=true&vCenter=true&size=32&width=660&color=00C0A0&background=00000000&duration=4200&pause=1600" />
 </div>
 
 <br>
