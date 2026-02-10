@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sourish Mudumby Venugopal - Personal Website</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --bg: #02030a;
+            --accent: #00f2ff;
+            --accent-glow: rgba(0, 242, 255, 0.4);
+            --overfit: #ff2d55;
+            --text: #e0e6ed;
+            --font: "Geist", "Inter", system-ui, -apple-system, sans-serif;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font);
+            cursor: crosshair;
+        }
+
+        #ui-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        #nav-menu {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            pointer-events: auto;
+            z-index: 20;
+        }
+
+        .nav-item {
+            background: rgba(0, 242, 255, 0.05);
+            border: 1px solid rgba(0, 242, 255, 0.2);
+            color: var(--accent);
+            padding: 0.8rem 1.2rem;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: right;
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-item.visited {
+            opacity: 0.5;
+            border-style: dashed;
+        }
+
+        .header {
+            opacity: 0.8;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            border-left: 2px solid var(--accent);
+            padding-left: 1rem;
+        }
+
+        .status-bar {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.7rem;
+            font-family: monospace;
+            opacity: 0.6;
+        }
+
+        #modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            width: 80vw;
+            max-width: 900px;
+            height: 70vh;
+            background: rgba(2, 3, 10, 0.85);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: auto;
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #modal.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) transparent;
+        }
+
+        .modal-body::-webkit-scrollbar { width: 4px; }
+        .modal-body::-webkit-scrollbar-thumb { background: var(--accent); }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 1.5rem;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+        .close-btn:hover { opacity: 1; }
+
+        .tag {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            background: rgba(0, 242, 255, 0.1);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .link-card {
+            padding: 1rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s;
+            display: block;
+        }
+
+        .link-card:hover {
+            border-color: var(--accent);
+            background: rgba(0, 242, 255, 0.05);
+        }
+
+        h2 { margin-top: 0; font-weight: 300; letter-spacing: 0.1em; }
+        p { line-height: 1.6; opacity: 0.8; }
+
+        /* Crosshair */
+        #crosshair {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+        .link-card:hover {
+            background: rgba(0, 242, 255, 0.22) !important;
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }       
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+
+<div id="crosshair"></div>
+
+<div id="ui-layer">
+    <div class="header">
+        <div>Sourish Mudumby Venugopal</div>
+        <div style="font-size: 0.6rem; opacity: 0.5; margin-top: 0.3rem;"> Computer Science • Quant Finance • Empirical Research</div>
+    </div>
+    
+    <div id="nav-menu">
+        <div class="nav-item" data-id="ABOUT">01_ABOUT_ME</div>
+        <div class="nav-item" data-id="EXPERIENCE">02_EXPERIENCE</div>
+        <div class="nav-item" data-id="EDUCATION">03_EDUCATION</div>
+        <div class="nav-item" data-id="RESEARCH">04_RESEARCH</div>
+        <div class="nav-item" data-id="PROJECTS">05_PROJECTS</div>
+        <div class="nav-item" data-id="AWARDS">06_AWARDS</div>
+    </div>
+
+    <div class="status-bar">
+        <div id="coord">POS: [0, 0, 0]</div>
+        <div id="fps">SYSTEM STABLE</div>
+        <div id="hint">SELECT NODE TO INVESTIGATE</div>
+    </div>
+</div>
+
+<div id="modal">
+    <div class="modal-header">
+        <h2 id="modal-title">SECTION_TITLE</h2>
+        <button class="close-btn" id="close-modal">&times;</button>
+    </div>
+    <div class="modal-body" id="modal-content">
+    </div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three'
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js'
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js'
+import { FilmPass } from 'three/addons/postprocessing/FilmPass.js'
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js'
+
+const VolumetricShader = {
+    uniforms: {
+        tDiffuse: { value: null },
+        time: { value: 0 },
+        exposure: { value: 0.18 },
+        decay: { value: 0.95 },
+        density: { value: 0.8 },
+        weight: { value: 0.4 },
+        lightPosition: { value: new THREE.Vector2(0.5, 0.5) }
+    },
+    vertexShader: `
+        varying vec2 vUv;
+        void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+    `,
+    fragmentShader: `
+        varying vec2 vUv;
+        uniform sampler2D tDiffuse;
+        uniform float time;
+        uniform float exposure;
+        uniform float decay;
+        uniform float density;
+        uniform float weight;
+        uniform vec2 lightPosition;
+        void main() {
+            vec2 deltaTextCoord = vec2(vUv - lightPosition);
+            deltaTextCoord *= 1.0 / float(16) * density;
+            vec2 coord = vUv;
+            float illuminationDecay = 1.0;
+            vec4 color = texture2D(tDiffuse, vUv);
+            for(int i=0; i<16; i++) {
+                coord -= deltaTextCoord;
+                vec4 texel = texture2D(tDiffuse, coord);
+                texel *= illuminationDecay * weight;
+                color += texel;
+                illuminationDecay *= decay;
+            }
+            gl_FragColor = color * exposure;
+        }
+    `
+};
+
+const GlitchShader = {
+    uniforms: {
+        tDiffuse: { value: null },
+        time: { value: 0 },
+        amount: { value: 0.005 },
+        angle: { value: 0.02 },
+        seed: { value: 0.02 },
+        seed_x: { value: 0.02 },
+        seed_y: { value: 0.02 },
+        distortion_x: { value: 0.5 },
+        distortion_y: { value: 0.6 },
+        col_s: { value: 0.05 }
+    },
+    vertexShader: `
+        varying vec2 vUv;
+        void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+    `,
+    fragmentShader: `
+        uniform sampler2D tDiffuse;
+        uniform float time;
+        uniform float amount;
+        varying vec2 vUv;
+        
+        float rand(vec2 co){
+            return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+        }
+
+        void main() {
+            vec2 p = vUv;
+            if (rand(vec2(time)) > 0.95) {
+                p.x += (rand(vec2(time)) - 0.5) * 0.05;
+            }
+            vec4 col = texture2D(tDiffuse, p);
+            vec4 colR = texture2D(tDiffuse, p + vec2(amount, 0.0));
+            vec4 colB = texture2D(tDiffuse, p - vec2(amount, 0.0));
+            gl_FragColor = vec4(colR.r, col.g, colB.b, col.a);
+        }
+    `
+};
+
+const scene = new THREE.Scene()
+scene.background = new THREE.Color(0x02030a)
+scene.fog = new THREE.FogExp2(0x02030a, 0.00015)
+
+const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 1, 30000)
+camera.position.set(0, 800, 1800)
+camera.lookAt(0, 400, -1500)
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
+renderer.setSize(innerWidth, innerHeight)
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2))
+renderer.outputColorSpace = THREE.SRGBColorSpace
+document.body.appendChild(renderer.domElement)
+
+const controls = new OrbitControls(camera, renderer.domElement)
+controls.enableDamping = true
+controls.dampingFactor = 0.05
+controls.rotateSpeed = 0.5
+controls.autoRotate = true
+controls.autoRotateSpeed = 0.1
+
+const composer = new EffectComposer(renderer)
+composer.addPass(new RenderPass(scene, camera))
+
+const bloomPass = new UnrealBloomPass(
+    new THREE.Vector2(innerWidth, innerHeight),
+    1.2, 
+    0.5, 
+    0.3  
+)
+composer.addPass(bloomPass)
+
+
+const filmPass = new FilmPass(0.05, 0.02, 648, false) 
+composer.addPass(filmPass)
+
+const outputPass = new OutputPass()
+composer.addPass(outputPass)
+
+
+const dataCount = 2000
+const dataGeo = new THREE.BoxGeometry(2, 2, 2)
+const dataMat = new THREE.MeshBasicMaterial({ color: 0x00f2ff, transparent: true, opacity: 0.4 })
+const dataMesh = new THREE.InstancedMesh(dataGeo, dataMat, dataCount)
+const dummy = new THREE.Object3D()
+
+for (let i = 0; i < dataCount; i++) {
+    dummy.position.set(
+        (Math.random() - 0.5) * 5000,
+        (Math.random() - 0.5) * 5000,
+        (Math.random() - 0.5) * 5000
+    )
+    dummy.scale.setScalar(Math.random() * 5 + 1)
+    dummy.updateMatrix()
+    dataMesh.setMatrixAt(i, dummy.matrix)
+}
+scene.add(dataMesh)
+
+
+const debrisCount = 200
+const debrisGeo = new THREE.TetrahedronGeometry(15, 0)
+const debrisMat = new THREE.MeshStandardMaterial({ color: 0x446688, wireframe: true, transparent: true, opacity: 0.2 })
+const debrisMesh = new THREE.InstancedMesh(debrisGeo, debrisMat, debrisCount)
+
+for (let i = 0; i < debrisCount; i++) {
+    dummy.position.set(
+        (Math.random() - 0.5) * 8000,
+        (Math.random() - 0.5) * 8000,
+        (Math.random() - 0.5) * 8000
+    )
+    dummy.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0)
+    dummy.updateMatrix()
+    debrisMesh.setMatrixAt(i, dummy.matrix)
+}
+scene.add(debrisMesh)
+
+
+function createStars(count, size, color, range) {
+    const geo = new THREE.BufferGeometry()
+    const pos = new Float32Array(count * 3)
+    for (let i = 0; i < pos.length; i++) {
+        pos[i] = (Math.random() - 0.5) * range
+    }
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3))
+    const mat = new THREE.PointsMaterial({
+        size: size,
+        color: color,
+        transparent: true,
+        opacity: 0.8,
+        sizeAttenuation: true
+    })
+    return new THREE.Points(geo, mat)
+}
+
+scene.add(createStars(10000, 2, 0xffffff, 20000)) 
+scene.add(createStars(5000, 4, 0x00f2ff, 15000))  
+scene.add(createStars(2000, 6, 0xff2d55, 10000))  
+
+const wickMat = new THREE.LineBasicMaterial({
+    color: 0x88aaff,
+    transparent: true,
+    opacity: 0.28
+});
+
+const bullBodyMat = new THREE.MeshBasicMaterial({
+    color: 0x00ffaa,
+    transparent: true,
+    opacity: 0.38
+});
+
+const bearBodyMat = new THREE.MeshBasicMaterial({
+    color: 0xff2d55,
+    transparent: true,
+    opacity: 0.38
+});
+
+const candleGroup = new THREE.Group();
+scene.add(candleGroup);
+
+const candleCount = 180; 
+const candleSpacing = 80;  
+const candleStartX = -(candleCount * candleSpacing) / 2;
+
+function createCandlestick(x, z, open, high, low, close) {
+    const group = new THREE.Group();
+    group.position.set(x, 0, z);
+
+    const wickPoints = [
+        new THREE.Vector3(0, high, 0),
+        new THREE.Vector3(0, low,  0)
+    ];
+    const wickGeo = new THREE.BufferGeometry().setFromPoints(wickPoints);
+    const wick = new THREE.Line(wickGeo, wickMat);
+    group.add(wick);
+
+    const top    = Math.max(open, close);
+    const bottom = Math.min(open, close);
+    const height = Math.max(top - bottom, 12);
+
+    const bodyGeo = new THREE.CylinderGeometry(22, 22, height, 6, 1);
+    const bodyMat = (close >= open)
+        ? bullBodyMat.clone()
+        : bearBodyMat.clone();
+
+    const volatility = high - low;
+    bodyMat.opacity = THREE.MathUtils.clamp(
+        0.25 + volatility / 400,
+        0.25,
+        0.65
+    );
+
+    const body = new THREE.Mesh(bodyGeo, bodyMat);
+    body.position.y = (top + bottom) / 2;
+    body.rotation.x = Math.PI / 2;
+
+    group.add(body);
+    return group;
+}
+
+
+for (let i = 0; i < candleCount; i++) {
+    const x = candleStartX + i * candleSpacing;          
+    const z = -1400 - Math.random() * 1800;         
+    const mid = 900 + Math.random() * 1400;         
+    const volatility = 50 + Math.random() * 220;
+
+    const open  = mid + (Math.random() - 0.5) * volatility;
+    const close = mid + (Math.random() - 0.5) * volatility * 0.92;
+    const high  = Math.max(open, close) + Math.random() * 110;
+    const low   = Math.min(open, close) - Math.random() * 110;
+
+    const candle = createCandlestick(x, z, open, high, low, close);
+    candle.userData = { driftSpeed: 0.5 + Math.random() * 1.2 };
+    candleGroup.add(candle);
+}
+
+const CONTENT = {
+    ABOUT: {
+        title: "About Me",
+        tags: ["Quant Finance", "CS @ Rutgers", "AI Researcher"],
+        body: `
+            <p>Computer Science and Mathematics student at Rutgers University.</p>
+            <p>Interested in hackathons and building side projects.</p>
+            <div class="link-grid">
+                <a href="https://www.linkedin.com/in/sourish-mudumby-venugopal-251323358" class="link-card" target="_blank">LinkedIn</a>
+                <a href="https://github.com/Sourish-07" class="link-card" target="_blank">GitHub</a>
+                <a href="https://medium.com/@sourishvenugopal11" class="link-card" target="_blank">Medium</a>
+                <a href="https://devpost.com/Sourish-07" class="link-card" target="_blank">Devpost</a>
+            </div>
+        `
+    },
+    EXPERIENCE: {
+        title: "Experience",
+        tags: ["Internships", "AI", "Research"],
+        body: `
+            <div style="margin-bottom: 1.5rem;">
+                <h4>Inspirit AI • Research Intern / Ambassador / Scholar</h4>
+                <p style="font-size: 0.8rem; opacity: 0.6;">Jun 2024 - Jul 2025</p>
+                <p>Applied AI research and community leadership. Multiple certifications in AI and presentation skills.</p>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                <h4>Capital Home Care Inc. • Intern</h4>
+                <p style="font-size: 0.8rem; opacity: 0.6;">Jul 2022 - Aug 2022</p>
+                <p>Auditing and operational teamwork in a healthcare environment.</p>
+            </div>
+        `
+    },
+    EDUCATION: {
+        title: "Education & Certs",
+        tags: ["Rutgers", "CS", "Certifications"],
+        body: `
+            <div style="margin-bottom: 1.5rem;">
+                <h4>Rutgers University</h4>
+                <p>B.S. in Computer Science (2025 – Present)</p>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                <h4>Certifications</h4>
+                <ul>
+                    <li><strong>Oracle Java Foundations</strong> (2024)</li>
+                    <li><strong>PCEP™ Python Programmer</strong> (2025)</li>
+                </ul>
+            </div>
+        `
+    },
+    RESEARCH: {
+        title: "Research & Writing",
+        tags: ["SSRN", "Medium", "Signals"],
+        body: `
+            <h3>SSRN Publication (2026)</h3>
+            <p><strong>"An Empirical Evaluation of Cross-Sectional Equity Signals Under Backtest Overfitting Diagnostics"</strong></p>
+            <p>25M+ observations, CPCV, PBO ≈ 0.60. Analyzes signal decay and validation rigor.</p>
+            <div class="link-grid">
+                <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6078546" class="link-card" target="_blank">Paper →</a>
+                <a href="https://github.com/Sourish-07/cross-sectional-equity-validation" class="link-card" target="_blank">Code →</a>
+            </div>
+            
+            <h4 style="margin-top: 1.5rem;">Medium Essays</h4>
+            <div class="link-grid">
+                <a href="https://medium.com/@sourishvenugopal11/when-metrics-become-targets-measurement-incentives-and-the-limits-of-quantification-9d4f6c4d8e8b" class="link-card" target="_blank">"When Metrics Become Targets"</a>
+                <a href="https://medium.com/@sourishvenugopal11" class="link-card" target="_blank">"Tradeoffs in Quantitative Systems"</a>
+                <a href="https://medium.com/@sourishvenugopal11" class="link-card" target="_blank">"When Accuracy Misleads"</a>
+            </div>
+        `
+    },
+    PROJECTS: {
+        title: "Project Portfolio",
+        tags: ["AI", "FinTech", "Full-Stack"],
+        body: `
+            <div style="margin-bottom: 2rem;">
+                <h4>Politi-folio (TartanHacks 1st Place)</h4>
+                <p>AI-driven financial back-office automation focusing on risk and compliance.</p>
+                <a href="https://github.com/Sourish-07" class="link-card" target="_blank">GitHub</a>
+            </div>
+            <div style="margin-bottom: 2rem;">
+                <h4>Trust Me Bro (Hack@Brown 2026)</h4>
+                <p>Real-time AI lie detection and financial betting simulator using computer vision and Gemini API.</p>
+                <a href="https://github.com/Sourish-07/HackBrown" class="link-card" target="_blank">GitHub</a>
+                <a href="https://devpost.com/software/trust-me-bro-i74zut" class="link-card" target="_blank">Devpost</a>
+            </div>
+            <div style="margin-bottom: 2rem;">
+                <h4>Attune (NexHacks 2026)</h4>
+                <p>AI-powered real-time patient monitoring system for hospitals using YOLOv8.</p>
+                <a href="https://github.com/Shrish-07/NexHacks" class="link-card" target="_blank">GitHub</a>
+                <a href="https://devpost.com/software/h-pi5j48" class="link-card" target="_blank">Devpost</a>
+            </div>
+            <div style="margin-bottom: 2rem;">
+                <h4>Type-less (PennApps XXVI)</h4>
+                <p>Sustainable AI prompting tool to reduce token usage and CO2 impact.</p>
+                <a href="https://github.com/sujalshah0444/PennApps2025" class="link-card" target="_blank">GitHub</a>
+                <a href="https://devpost.com/software/type-less" class="link-card" target="_blank">Devpost</a>
+            </div>
+            <div style="margin-bottom: 2rem;">
+                <h4>LawLens</h4>
+                <p>AI Legal document summarization platform using BART-large models.</p>
+                <a href="https://github.com/Shrish-07/Lawlens" class="link-card" target="_blank">GitHub</a>
+            </div>
+        `
+    },
+    AWARDS: {
+        title: "Awards",
+        tags: ["TartanHacks", "BNY Mellon"],
+        body: `
+            <div class="link-card" style="border-color: var(--accent);">
+                <h4>1st Place – BNY Track, TartanHacks (Feb 2026)</h4>
+                <p>Built Politi-folio at CMU's largest hackathon.</p>
+            </div>
+        `
+    },
+    WELCOME: {
+        title: "Sourish Mudumby Venugopal",
+        tags: ["Quantitative Research", "Computational Finance", "Rutgers CS"],
+        body: `
+            <p>Presenting my work in empirical asset pricing, backtest diagnostics, AI systems, and reproducible quantitative research.</p>            <p><strong>Navigation:</strong></p>
+            <ul style="margin-left: 1.2rem; line-height: 1.8;">
+                <li>Drag to orbit • Scroll / pinch to zoom</li>
+                <li>Click glowing nodes or sidebar items to explore sections</li>
+            </ul>
+            <button class="link-card" style="width: 100%; text-align: center; margin-top: 1.8rem; padding: 1rem; font-weight: 500; background: rgba(0, 242, 255, 0.12); border: 1px solid var(--accent); color: var(--accent); transition: all 0.3s;" onclick="document.getElementById('modal').classList.remove('active')">ENTER INTERFACE</button>        `
+    }
+}
+
+
+const nodeGroup = new THREE.Group()
+scene.add(nodeGroup)
+
+const nodes = []
+const nodePositions = [
+    { id: 'ABOUT', pos: [0, 0, 0], color: 0x00f2ff },
+    { id: 'EXPERIENCE', pos: [-800, 300, -500], color: 0x00ff88 },
+    { id: 'EDUCATION', pos: [800, -200, -600], color: 0x0088ff },
+    { id: 'RESEARCH', pos: [400, 600, 600], color: 0xff2d55 },
+    { id: 'PROJECTS', pos: [-600, -700, 400], color: 0x7000ff },
+    { id: 'AWARDS', pos: [1000, 500, -200], color: 0xffdd00 }
+]
+
+const nodeGeo = new THREE.IcosahedronGeometry(40, 2)
+const raycaster = new THREE.Raycaster()
+const mouse = new THREE.Vector2()
+
+nodePositions.forEach(data => {
+    const mat = new THREE.MeshStandardMaterial({
+        color: data.color,
+        emissive: data.color,
+        emissiveIntensity: 0.5,
+        wireframe: true
+    })
+    const mesh = new THREE.Mesh(nodeGeo, mat)
+    mesh.position.set(...data.pos)
+    mesh.userData = { id: data.id, originalColor: data.color }
+    
+    const core = new THREE.Mesh(
+        new THREE.SphereGeometry(15, 16, 16),
+        new THREE.MeshBasicMaterial({ color: data.color })
+    )
+    mesh.add(core)
+    
+    nodeGroup.add(mesh)
+    nodes.push(mesh)
+})
+
+const lineMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.2 })
+nodes.forEach((n1, i) => {
+    nodes.slice(i+1).forEach(n2 => {
+        const points = [n1.position, n2.position]
+        const geo = new THREE.BufferGeometry().setFromPoints(points)
+        const line = new THREE.Line(geo, lineMat)
+        scene.add(line)
+    })
+})
+
+
+const modal = document.getElementById('modal')
+const modalTitle = document.getElementById('modal-title')
+const modalContent = document.getElementById('modal-content')
+const closeModal = document.getElementById('close-modal')
+const crosshair = document.getElementById('crosshair')
+
+function pboExplosion() {
+    const explosionCount = 500
+    const expGeo = new THREE.SphereGeometry(2, 8, 8)
+    const expMat = new THREE.MeshBasicMaterial({ color: 0xff2d55 })
+    const expGroup = new THREE.Group()
+    
+    for(let i=0; i<explosionCount; i++) {
+        const p = new THREE.Mesh(expGeo, expMat)
+        const phi = Math.random() * Math.PI * 2
+        const theta = Math.random() * Math.PI
+        const r = 40
+        p.position.set(
+            r * Math.sin(theta) * Math.cos(phi),
+            r * Math.sin(theta) * Math.sin(phi),
+            r * Math.cos(theta)
+        )
+        p.userData.vel = p.position.clone().normalize().multiplyScalar(Math.random() * 10 + 5)
+        expGroup.add(p)
+    }
+    
+    const researchNode = nodes.find(n => n.userData.id === 'RESEARCH')
+    expGroup.position.copy(researchNode.position)
+    scene.add(expGroup)
+    
+    let frames = 0
+    function animateExp() {
+        if (frames > 100) {
+            scene.remove(expGroup)
+            return
+        }
+        expGroup.children.forEach(c => {
+            c.position.add(c.userData.vel)
+            c.scale.multiplyScalar(0.95)
+        })
+        frames++
+        requestAnimationFrame(animateExp)
+    }
+    animateExp()
+}
+
+function openSection(id) {
+    if (id === 'RESEARCH') {
+    candleGroup.children.forEach(c => {
+        c.userData.driftSpeed *= 1.8;
+    });
+    }
+    if (id === 'RESEARCH') pboExplosion()
+    
+    nodes.forEach(n => {
+        if (n.userData.id === id) {
+            n.material.emissiveIntensity = 2.0
+            n.userData.visited = true
+            n.scale.setScalar(1.5)
+            document.querySelectorAll('.nav-item').forEach(item => {
+                if(item.getAttribute('data-id') === id) item.classList.add('visited')
+            })
+        } else {
+            n.material.emissiveIntensity = n.userData.visited ? 0.3 : 0.6
+            n.scale.setScalar(1.0)
+        }
+    })
+
+    const node = nodes.find(n => n.userData.id === id)
+    if (node) {
+        const targetPos = node.position.clone().add(new THREE.Vector3(0, 100, 400))
+        camera.position.lerp(targetPos, 0.1) 
+        controls.target.lerp(node.position, 0.1)
+    }
+
+    const data = CONTENT[id]
+    if (!data) return
+    modalTitle.innerText = data.title
+    modalContent.innerHTML = `
+        <div style="margin-bottom: 1.5rem;">
+            ${data.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+        </div>
+        ${data.body}
+    `
+    modal.classList.add('active')
+    controls.autoRotate = false
+}
+
+
+document.querySelectorAll('.nav-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-id')
+        openSection(id)
+    })
+})
+
+window.onload = () => {
+    setTimeout(() => {
+        openSection('WELCOME')
+    }, 1000)
+}
+
+closeModal.onclick = () => {
+    modal.classList.remove('active')
+    controls.autoRotate = true
+    nodes.forEach(n => n.scale.setScalar(1.0))
+}
+
+window.addEventListener('pointermove', e => {
+    mouse.x = (e.clientX / innerWidth) * 2 - 1
+    mouse.y = -(e.clientY / innerHeight) * 2 + 1
+    
+    crosshair.style.left = e.clientX + 'px'
+    crosshair.style.top = e.clientY + 'px'
+})
+
+window.addEventListener('click', () => {
+    raycaster.setFromCamera(mouse, camera)
+    const hits = raycaster.intersectObjects(nodes)
+    if (hits.length > 0) {
+        openSection(hits[0].object.userData.id)
+    }
+})
+
+
+
+const clock = new THREE.Clock()
+
+function animate() {
+    requestAnimationFrame(animate)
+    const elapsed = clock.getElapsedTime()
+
+    for (let i = 0; i < dataCount; i++) {
+        dataMesh.getMatrixAt(i, dummy.matrix)
+        dummy.position.setFromMatrixPosition(dummy.matrix)
+        dummy.position.y += Math.sin(elapsed * 0.5 + i) * 0.05
+        dummy.updateMatrix()
+        dataMesh.setMatrixAt(i, dummy.matrix)
+    }
+    dataMesh.instanceMatrix.needsUpdate = true
+
+    for (let i = 0; i < debrisCount; i++) {
+        debrisMesh.getMatrixAt(i, dummy.matrix)
+        dummy.position.setFromMatrixPosition(dummy.matrix)
+        dummy.rotation.setFromRotationMatrix(dummy.matrix)
+        dummy.position.y += Math.sin(elapsed * 0.2 + i) * 0.1
+        dummy.rotation.x += 0.005
+        dummy.updateMatrix()
+        debrisMesh.setMatrixAt(i, dummy.matrix)
+    }
+    debrisMesh.instanceMatrix.needsUpdate = true
+    candleGroup.children.forEach((candle, i) => {
+        candle.position.x += candle.userData.driftSpeed * 0.45;
+
+        candle.position.y =
+            Math.sin(elapsed * 0.6 + candle.position.x * 0.002) * 18;
+
+        if (candle.position.x > -candleStartX) {
+            candle.position.x = candleStartX;
+        }
+    });
+
+    nodes.forEach((node, i) => {
+        node.rotation.y += 0.005
+        if (!node.userData.visited) {
+            node.material.emissiveIntensity = 0.5 + Math.sin(elapsed * 2 + i) * 0.2
+        }
+    })
+
+    raycaster.setFromCamera(mouse, camera)
+    const hits = raycaster.intersectObjects(nodes)
+    if (hits.length > 0) {
+        crosshair.style.width = '50px'
+        crosshair.style.height = '50px'
+        crosshair.style.borderColor = hits[0].object.userData.visited ? '#00f2ff' : '#ffffff'
+        document.getElementById('hint').innerText = `VIEW: ${hits[0].object.userData.id}`
+        document.getElementById('hint').style.color = '#00f2ff'
+    } else {
+        crosshair.style.width = '20px'
+        crosshair.style.height = '20px'
+        crosshair.style.borderColor = 'rgba(0, 242, 255, 0.5)'
+        document.getElementById('hint').innerText = '...'
+        document.getElementById('hint').style.color = 'white'
+    }
+
+    controls.update()
+    composer.render()
+}
+
+animate()
+
+window.addEventListener('resize', () => {
+    camera.aspect = innerWidth / innerHeight
+    camera.updateProjectionMatrix()
+    renderer.setSize(innerWidth, innerHeight)
+    composer.setSize(innerWidth, innerHeight)
+})
+
+</script>
+</body>
+</html>
